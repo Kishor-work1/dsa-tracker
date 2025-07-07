@@ -12,18 +12,29 @@ Title: ${name}
 Link: ${link}
 ID: ${id}
 
-Suggest the top 5 similar DSA problems to practice, with a short description and a direct link (preferably LeetCode or similar).
+Suggest the top 5 similar DSA problems to practice. For each, return:
+- title (string)
+- link (string, if available)
+- tags (array of strings, e.g. ["DP", "String"])
+- description (1-line summary)
+- difficulty (Easy/Medium/Hard/Unknown)
+
 ONLY return a valid JSON array, no explanation, no markdown, no code block, just the array:
 [
-  { "title": "...", "link": "..." },
-  ...
+  {
+    "title": "...",
+    "link": "...",
+    "tags": ["...", "..."],
+    "description": "...",
+    "difficulty": "..."
+  }
 ]
 `;
 
   const geminiApiKey = process.env.GEMINI_API_KEY;
   const geminiEndpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
 
-  let similar: { title: string; link: string }[] = [];
+  let similar: { title: string; link: string; tags?: string[]; description?: string; difficulty?: string }[] = [];
   try {
     const geminiRes = await fetch(geminiEndpoint, {
       method: 'POST',

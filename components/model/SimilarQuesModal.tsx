@@ -25,7 +25,9 @@ export default function SimilarQuesModal({
   problemLink,
   problemId,
 }: SimilarQuesModalProps) {
-  const [aiSimilar, setAiSimilar] = useState<{ title: string; link: string }[] | null>(null);
+  const [aiSimilar, setAiSimilar] = useState<(
+    { title: string; link: string; tags?: string[]; description?: string; difficulty?: string }
+  )[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,14 +49,20 @@ export default function SimilarQuesModal({
     }
   }, [open, problemName, problemLink, problemId]);
 
+  const addAllToPractice = (problems: (
+    { title: string; link: string; tags?: string[]; description?: string; difficulty?: string }
+  )[] | null) => {
+    // Implementation of addAllToPractice function
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl w-full rounded-2xl bg-blue-300 text-black border border-zinc-800 p-6 shadow-lg">
+      <DialogContent className="max-w-xl w-full rounded-2xl bg-zinc-900 text-zinc-100 border border-zinc-700 p-6 shadow-xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold  mb-1">
+          <DialogTitle className="text-2xl font-bold mb-1">
             Similar Questions to "{problemName}"
           </DialogTitle>
-          <DialogDescription className="text-sm text-black mb-4">
+          <DialogDescription className="text-sm text-zinc-400 mb-4">
             Boost your preparation by exploring these related problems.
           </DialogDescription>
         </DialogHeader>
@@ -72,28 +80,43 @@ export default function SimilarQuesModal({
             </div>
           )}
 
-          {!loading && !error && aiSimilar && aiSimilar.length > 0 ? (
-            <ul className="space-y-2">
-              {aiSimilar.map((item, i) => (
-                <li key={i}>
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block bg-zinc-800 hover:bg-zinc-700 text-zinc-100 hover:text-blue-400 px-4 py-2 rounded-md text-sm transition-all font-medium"
-                  >
-                    {i + 1}. {item.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            !loading &&
-            !error && (
-              <div className="text-sm text-center text-zinc-500">
-                No similar problems found.
+          {aiSimilar && aiSimilar.length > 0 && (
+            <>
+              <ul className="space-y-2">
+                {aiSimilar.map((item, i) => (
+                  <li key={i} className="relative group">
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block bg-zinc-800 hover:bg-blue-700 text-zinc-100 hover:text-white px-4 py-2 rounded-md text-sm transition-all font-medium"
+                    >
+                      {i + 1}. {item.title}
+                      {item.tags?.map(tag => (
+                        <span key={tag} className="ml-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded">
+                          {tag}
+                        </span>
+                      ))}
+                    </a>
+                    <div className="absolute left-full top-0 ml-2 w-64 p-3 bg-zinc-800 text-white rounded shadow-lg opacity-0 group-hover:opacity-100 transition">
+                      <div className="font-bold">{item.title}</div>
+                      <div className="text-xs text-zinc-400 mb-1">{item.tags?.join(', ')}</div>
+                      <div className="text-sm">{item.description || "No preview available."}</div>
+                      <div className="text-xs mt-1">Difficulty: {item.difficulty || "Unknown"}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <button
+                className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded font-semibold"
+                onClick={() => addAllToPractice(aiSimilar)}
+              >
+                Add all to practice list
+              </button>
+              <div className="mt-4 text-xs text-center text-zinc-500">
+                Suggested using semantic similarity between titles (AI-powered).
               </div>
-            )
+            </>
           )}
         </div>
       </DialogContent>

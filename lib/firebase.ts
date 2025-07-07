@@ -1,7 +1,7 @@
 // lib/firebase.ts
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs, query, where, orderBy, onSnapshot, serverTimestamp } from "firebase/firestore";
+import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, getDocs, query, where, orderBy, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB-VocZjQrJjxjKWhJs79KPehqDgPGt2Ts",
@@ -126,5 +126,42 @@ export const problemService = {
       console.error('Error getting filtered problems:', error);
       throw error;
     }
+  }
+};
+
+// Define the UserProfile type
+export interface UserProfile {
+  name: string;
+  username: string;
+  email: string;
+  location: string;
+  bio: string;
+  joinDate: string;
+  totalProblems: number;
+  solvedProblems: number;
+  currentStreak: number;
+  maxStreak: number;
+  preferences: {
+    notifications: boolean;
+    publicProfile: boolean;
+    showProgress: boolean;
+  };
+  photoURL?: string;
+}
+
+// Example userProfileService
+export const userProfileService = {
+  onUserProfileChange: (uid: string, callback: (profile: UserProfile | null) => void) => {
+    // Listen to Firestore or Realtime Database for changes
+    // Example for Firestore:
+    const userDocRef = doc(db, 'users', uid);
+    const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+      callback(docSnap.exists() ? (docSnap.data() as UserProfile) : null);
+    });
+    return unsubscribe;
+  },
+  setUserProfile: async (uid: string, profile: UserProfile) => {
+    // Save to Firestore or Realtime Database
+    await setDoc(doc(db, 'users', uid), profile, { merge: true });
   }
 };

@@ -109,8 +109,9 @@ const Problems = () => {
       try {
         await addProblem({
           ...newProblem,
+          userId,
           similarQuestions: 'AISimilar'
-        });
+        } as any);
         setNewProblem({
           title: '',
           link: '',

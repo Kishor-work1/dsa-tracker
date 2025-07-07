@@ -7,6 +7,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
+import { useProblems } from '@/lib/hooks/useProblems';
 
 interface SimilarQuesModalProps {
   open: boolean;
@@ -30,6 +31,7 @@ export default function SimilarQuesModal({
   )[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addProblem, userId } = useProblems();
 
   useEffect(() => {
     if (open && problemName) {
@@ -49,10 +51,23 @@ export default function SimilarQuesModal({
     }
   }, [open, problemName, problemLink, problemId]);
 
-  const addAllToPractice = (problems: (
-    { title: string; link: string; tags?: string[]; description?: string; difficulty?: string }
-  )[] | null) => {
-    // Implementation of addAllToPractice function
+  const addAllToPractice = async (
+    problems: (
+      { title: string; link: string; tags?: string[]; description?: string; difficulty?: string }
+    )[] | null
+  ) => {
+    if (!problems || !userId) return;
+    for (const p of problems) {
+      await addProblem({
+        title: p.title,
+        link: p.link,
+        topic: p.tags?.[0] || '',
+        difficulty: (p.difficulty as any) || 'Unknown',
+        status: 'Unsolved',
+        similarQuestions: '',
+      });
+    }
+    onOpenChange(false);
   };
 
   return (
@@ -108,7 +123,7 @@ export default function SimilarQuesModal({
                 ))}
               </ul>
               <button
-                className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded font-semibold"
+                className="w-full cursor-pointer mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded font-semibold"
                 onClick={() => addAllToPractice(aiSimilar)}
               >
                 Add all to practice list

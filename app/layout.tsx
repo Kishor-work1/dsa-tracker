@@ -4,12 +4,13 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Icon from '../public/icon.png'
 
 export const metadata: Metadata = {
   title: "DSA Tracker",
   description: "Your DSA progress tracker",
   icons: {
-    icon: "/icon.png",
+    icon: "../public/",
   },
 };
 
@@ -20,14 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
+
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
       >
         <Navbar />
-        <div className="pt-15 pb-14">
+        <div className="pt-15">
           {children}
         </div>
         <Footer />

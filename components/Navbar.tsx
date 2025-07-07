@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { BarChart3, BookOpen, Home, Moon, Sun, LogIn, LogOut, User } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
@@ -11,6 +11,7 @@ export default function Navbar() {
   const [isDark, setIsDark] = useState(true);
   const [user, setUser] = useState(null as null | { displayName: string | null, email: string | null });
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     // Check for theme
@@ -58,15 +59,15 @@ export default function Navbar() {
         </Link>
         
         <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="flex items-center gap-2 hover:text-blue-600 transition-colors text-sm font-medium">
+          <Link href="/dashboard" className={`flex items-center gap-2 hover:text-blue-600 transition-colors text-sm font-medium ${pathname === '/dashboard' ? 'text-blue-600 font-bold' : ''}`}>
             <Home size={16} />
             Dashboard
           </Link>
-          <Link href="/problems" className="flex items-center gap-2 hover:text-blue-600 transition-colors text-sm font-medium">
+          <Link href="/problems" className={`flex items-center gap-2 hover:text-blue-600 transition-colors text-sm font-medium ${pathname === '/problems' ? 'text-blue-600 font-bold' : ''}`}>
             <BookOpen size={16} />
             Problems
           </Link>
-          <Link href="/statistics" className="flex items-center gap-2 hover:text-blue-600 transition-colors text-sm font-medium">
+          <Link href="/statistics" className={`flex items-center gap-2 hover:text-blue-600 transition-colors text-sm font-medium ${pathname === '/statistics' ? 'text-blue-600 font-bold' : ''}`}>
             <BarChart3 size={16} />
             Statistics
           </Link>

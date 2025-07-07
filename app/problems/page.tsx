@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Plus, Filter, ChevronDown, ExternalLink, Edit, Trash2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Problem, Difficulty, Status } from '@/lib/firebase';
 import { useProblems } from '@/lib/hooks/useProblems';
+import SimilarQuesModal from "@/components/model/SimilarQuesModal";
 
 type SortableKeys = 'title' | 'difficulty' | 'status';
 
@@ -28,6 +29,11 @@ const Problems = () => {
     difficulty: 'Medium' as Difficulty,
     status: 'Unsolved' as Status,
   });
+  const [similarModalOpen, setSimilarModalOpen] = useState(false);
+  const [selectedSimilarQuestions, setSelectedSimilarQuestions] = useState<string | string[]>("");
+  const [selectedProblemName, setSelectedProblemName] = useState("");
+  const [selectedProblemLink, setSelectedProblemLink] = useState<string | undefined>(undefined);
+  const [selectedProblemId, setSelectedProblemId] = useState<string | undefined>(undefined);
 
   const topics = ['All', 'Array', 'String', 'Hash Table', 'Linked List', 'Math', 'Binary Search', 'Dynamic Programming', 'Sliding Window', 'Divide and Conquer'];
   const difficulties: (Difficulty | 'All')[] = ['All', 'Easy', 'Medium', 'Hard'];
@@ -420,9 +426,19 @@ const Problems = () => {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-blue-600 dark:text-blue-400 text-sm">
-                        {problem.similarQuestions}
-                      </span>
+                      <button
+                        className="text-blue-600 dark:text-blue-400 text-sm underline hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium cursor-pointer"
+                        onClick={() => {
+                          setSelectedSimilarQuestions(problem.similarQuestions ?? "");
+                          setSelectedProblemName(problem.title);
+                          setSelectedProblemLink(problem.link);
+                          setSelectedProblemId(problem.id);
+                          setSimilarModalOpen(true);
+                        }}
+                        type="button"
+                      >
+                        {problem.similarQuestions || "View"}
+                      </button>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
@@ -780,6 +796,16 @@ const Problems = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Similar Questions Modal */}
+        <SimilarQuesModal
+          open={similarModalOpen}
+          onOpenChange={setSimilarModalOpen}
+          similarQuestions={selectedSimilarQuestions}
+          problemName={selectedProblemName}
+          problemLink={selectedProblemLink}
+          problemId={selectedProblemId}
+        />
       </div>
     </div>
   );

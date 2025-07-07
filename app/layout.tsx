@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Inter } from "next/font/google";  // closest to GeistSans
+import { Roboto_Mono } from "next/font/google";  // closest to GeistMono
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import Icon from '../public/icon.png'
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const mono = Roboto_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
   title: "DSA Tracker",
   description: "Your DSA progress tracker",
   icons: {
-    icon: "../public/",
+    icon: "/icon.png", // fixed icon path
   },
 };
 
@@ -20,15 +29,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-
-      <body
-        className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
-      >
+    <html lang="en" className={`${inter.variable} ${mono.variable}`}>
+      <body className="antialiased">
         <Navbar />
-        <div className="pt-15">
-          {children}
-        </div>
+        <div className="pt-15">{children}</div>
         <Footer />
       </body>
     </html>

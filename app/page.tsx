@@ -68,6 +68,24 @@ export default function Home() {
     }
   } as const;
 
+  // DSA Facts
+  const dsaFacts = [
+    "The time complexity of binary search is O(log n).",
+    "A stack follows Last-In-First-Out (LIFO) principle.",
+    "Dijkstra's algorithm finds the shortest path in a weighted graph.",
+    "A hash table offers average O(1) lookup time.",
+    "Merge sort is a stable, divide-and-conquer sorting algorithm.",
+    "A tree with n nodes has exactly n-1 edges.",
+    "Graphs can be represented as adjacency lists or matrices.",
+    "Breadth-First Search (BFS) uses a queue data structure.",
+    "Quick sort has an average time complexity of O(n log n).",
+    "A heap is a complete binary tree used for priority queues."
+  ];
+  const [randomFact, setRandomFact] = useState("");
+  useEffect(() => {
+    setRandomFact(dsaFacts[Math.floor(Math.random() * dsaFacts.length)]);
+  }, []);
+
   return (
     <main className="flex flex-col items-center w-full overflow-hidden mt-0 pt-0">
       {/* Hero Section with Parallax */}
@@ -160,31 +178,24 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
-        {/* Stats Section */}
+        {/* Random DSA Fact Section (replaces stats) */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-16 relative z-10"
+          className="flex flex-col items-center justify-center mt-16 relative z-10"
         >
-          {[
-            { label: "Problems Available", value: stats.problems, suffix: "+" },
-            { label: "Active Users", value: stats.users, suffix: "+" },
-            { label: "Problems Solved", value: stats.solved, suffix: "+" }
-          ].map((stat, index) => (
+          <div className="flex items-center gap-4 bg-white/80 dark:bg-gray-900/80 rounded-2xl px-8 py-6 shadow-lg border border-gray-100 dark:border-gray-800">
+            <span className="text-4xl">💡</span>
             <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.4 + index * 0.1, duration: 0.5 }}
-              className="text-center"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1.4, duration: 0.6 }}
+              className="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200 max-w-xl"
             >
-              <div className="text-3xl sm:text-4xl font-bold text-blue-600 dark:text-blue-400">
-                <AnimatedCounter end={stat.value} suffix={stat.suffix} />
-              </div>
-              <div className="text-gray-600 dark:text-gray-400 font-medium">{stat.label}</div>
+              {randomFact}
             </motion.div>
-          ))}
+          </div>
         </motion.div>
       </motion.section>
 

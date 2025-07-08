@@ -237,6 +237,24 @@ const UserDashboard = () => {
     }
   };
 
+  if (!userId) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-4">
+            Please log in to view your dashboard
+          </h2>
+          <button
+            onClick={() => window.location.href = '/login'}
+            className="mt-4 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg shadow-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
@@ -297,10 +315,10 @@ const UserDashboard = () => {
     return weeks.reverse();
   };
 
-  // Get all unique topics from solved problems
+  // Get all unique topics from all solved problems
   const solvedTopics = Array.from(
     new Set(
-      recentProblems
+      problems
         .filter(p => p.status === 'Solved' && p.topic)
         .map(p => p.topic)
     )
@@ -382,7 +400,7 @@ const UserDashboard = () => {
                   {!isEditing ? (
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                      className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer"
                     >
                       <Edit size={16} />
                       Edit Profile
@@ -391,14 +409,14 @@ const UserDashboard = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={handleSave}
-                        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+                        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer"
                       >
                         <Save size={16} />
                         Save
                       </button>
                       <button
                         onClick={handleCancel}
-                        className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
+                        className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer"
                       >
                         <X size={16} />
                         Cancel
@@ -452,7 +470,7 @@ const UserDashboard = () => {
               </h3>
               <button
                 onClick={() => router.push('/problems')}
-                className="text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
+                className="text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1 cursor-pointer"
               >
                 View All <ExternalLink size={14} />
               </button>
@@ -490,7 +508,7 @@ const UserDashboard = () => {
                 <p className="text-slate-400 mb-4">No problems solved yet</p>
                 <button
                   onClick={() => router.push('/problems')}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center gap-2 mx-auto"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center gap-2 mx-auto cursor-pointer"
                 >
                   <Plus size={16} />
                   Add Your First Problem

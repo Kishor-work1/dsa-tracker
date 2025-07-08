@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, useScroll, useTransform, Variants } from "framer-motion";
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState({});
@@ -81,10 +82,15 @@ export default function Home() {
     "Quick sort has an average time complexity of O(n log n).",
     "A heap is a complete binary tree used for priority queues."
   ];
-  const [randomFact, setRandomFact] = useState("");
+  const [factIndex, setFactIndex] = useState(0);
   useEffect(() => {
-    setRandomFact(dsaFacts[Math.floor(Math.random() * dsaFacts.length)]);
-  }, []);
+    const interval = setInterval(() => {
+      setFactIndex((prev) => (prev + 1) % dsaFacts.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [dsaFacts.length]);
+
+  const router = useRouter();
 
   return (
     <main className="flex flex-col items-center w-full overflow-hidden mt-0 pt-0">
@@ -164,14 +170,15 @@ export default function Home() {
             <motion.button
               whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(59, 130, 246, 0.4)" }}
               whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 text-white cursor-pointer px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
+              onClick={() => router.push('/problems')}
             >
               Start Tracking Free
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="border-2 border-blue-600 text-blue-600 dark:text-blue-400 px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-50 dark:hover:bg-blue-950 transition-all duration-300"
+              className="border-2 border-blue-600 text-blue-600 dark:text-blue-400 cursor-pointer px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-50 dark:hover:bg-blue-950 transition-all duration-300"
             >
               See Demo
             </motion.button>
@@ -183,17 +190,19 @@ export default function Home() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="flex flex-col items-center justify-center mt-16 relative z-10"
+          className="flex flex-col items-center justify-center mt-5 relative z-10"
         >
-          <div className="flex items-center gap-4 bg-white/80 dark:bg-gray-900/80 rounded-2xl px-8 py-6 shadow-lg border border-gray-100 dark:border-gray-800">
-            <span className="text-4xl">💡</span>
+          <div className="flex items-center gap-4 rounded-2xl px-8 py-6">
+          
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
+              key={factIndex}
+              initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.4, duration: 0.6 }}
-              className="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200 max-w-xl"
+              exit={{ opacity: 0, x: -40 }}
+              transition={{ duration: 0.6, type: 'spring', stiffness: 80 }}
+              className="text-2xl sm:text-xl font-semibold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent max-w-xl"
             >
-              {randomFact}
+              {dsaFacts[factIndex]}
             </motion.div>
           </div>
         </motion.div>
